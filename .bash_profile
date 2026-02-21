@@ -229,3 +229,31 @@ function wip() {
     git commit --no-verify --fixup "$FIXUP_HASH"
   fi
 }
+
+# Resets the current branch to upstream/main and cherry-picks the latest commit back on top.
+# Useful when old commits no longer match and rebase would conflict.
+# Usage:
+# $ replant
+function replant() {
+  BRANCH=$(git branch --show-current)
+
+  if [ "$BRANCH" = "main" ]; then
+    echo "Cannot replant on main"
+    return 1
+  fi
+
+  COMMIT=$(git rev-parse HEAD)
+  echo "Saving commit $COMMIT"
+
+  CMD="git fetch upstream"
+  echo $CMD
+  $CMD
+
+  CMD="git reset --hard upstream/main"
+  echo $CMD
+  $CMD
+
+  CMD="git cherry-pick $COMMIT"
+  echo $CMD
+  $CMD
+}
