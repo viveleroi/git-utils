@@ -12,8 +12,6 @@ alias amend='git add . && git commit --amend'
 alias amendnv='git add . && git commit --amend --no-verify'
 alias log='git log'
 alias log1='git log --oneline'
-alias dev='git add . && git commit --fixup $(git log main..HEAD --reverse --format="%H" | head -n 1)'
-alias wip='git add . && git commit --fixup $(git log main..HEAD --reverse --format="%H" | head -n 1) --no-verify'
 alias squash='git rebase --autosquash main'
 
 function git_branch_name()
@@ -48,7 +46,7 @@ function rmain() {
 # Interactive rebase with X commits off head
 # Usage:
 # $ squash (number from head)
-function squash() {
+function squashn() {
  local NUMBER=${1:-2}
 
  echo "git rebase -i HEAD~$NUMBER"
@@ -148,4 +146,30 @@ function branchd() {
 
   echo "git push $REMOTE :$BRANCH"
   git push "$REMOTE" ":$BRANCH"
+}
+
+# Makes a dev/fixup commit if there are no commits on the branch, otherwise makes a fixup to the first commit on the branch. 
+# Usage:
+# $ dev
+function dev() {
+  git add .
+  local FIXUP_HASH=$(git log main..HEAD --reverse --format="%H" | head -n 1)
+  if [[ -z "$FIXUP_HASH" ]]; then
+    git commit -m "dev"
+  else
+    git commit --fixup "$FIXUP_HASH"
+  fi
+}
+
+# Makes a WIP commit if there are no commits on the branch, otherwise makes a fixup to the first commit on the branch, without running pre-commit hooks.
+# Usage:
+# $ wip
+function wip() {
+  git add .
+  local FIXUP_HASH=$(git log main..HEAD --reverse --format="%H" | head -n 1)
+  if [[ -z "$FIXUP_HASH" ]]; then
+    git commit -m "wip" --no-verify
+  else
+    git commit --no-verify --fixup "$FIXUP_HASH"
+  fi
 }
