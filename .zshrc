@@ -79,7 +79,7 @@ function rfeat() {
 
 # Pulls and rebases the remote branch
 # Usage:
-# $ gpull (branch: current, or name)
+# $ gpull
 # $ gpull (remote: origin, or name) (branch: current, or name)
 function gpull() {
   local REMOTE=${1:-'origin'}
@@ -96,7 +96,7 @@ function gpull() {
 
 # Pushes a local branch to a remote
 # Usage:
-# $ gpush (branch: current, or name)
+# $ gpush
 # $ gpush (remote: origin, or name) (branch: current, or name)
 function gpush() {
   local REMOTE=${1:-'origin'}
@@ -113,7 +113,7 @@ function gpush() {
 
 # Force-pushes a local branch to a remote
 # Usage:
-# $ gfpush (branch: current, or name)
+# $ gfpush
 # $ gfpush (remote: origin, or name) (branch: current, or name)
 function gfpush() {
   local REMOTE=${1:-'origin'}
@@ -130,8 +130,8 @@ function gfpush() {
 
 # Deletes a branch both locally and from a remote.
 # Usage:
-# $ branchd (branch: current, or name)
-# $ branchd (remote: origin, or name) (branch: current, or name)
+# $ branchd (branch)
+# $ branchd (branch) (remote: origin, or name)
 function branchd() {
   local BRANCH=$1
   local REMOTE=${2:-'origin'}
