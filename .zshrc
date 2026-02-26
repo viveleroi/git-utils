@@ -13,6 +13,8 @@ alias amendnv='git add . && git commit --amend --no-verify'
 alias log='git log'
 alias log1='git log --oneline'
 alias squash='git rebase --autosquash main'
+alias dev='git add . && git commit -m "dev(dev): Dev"'
+alias wip='git add . && git commit -m "wip" --no-verify'
 
 function git_branch_name()
 {
@@ -148,29 +150,16 @@ function branchd() {
   git push "$REMOTE" ":$BRANCH"
 }
 
-# Makes a dev/fixup commit if there are no commits on the branch, otherwise makes a fixup to the first commit on the branch. 
+# Makes a fixup commit if there are no commits on the branch, otherwise makes a fixup to the first commit on the branch. 
 # Usage:
 # $ dev
-function dev() {
+function fixup() {
   git add .
   local FIXUP_HASH=$(git log main..HEAD --reverse --format="%H" | head -n 1)
   if [[ -z "$FIXUP_HASH" ]]; then
-    git commit -m "dev"
+    git commit -m "dev(dev): Dev"
   else
     git commit --fixup "$FIXUP_HASH"
-  fi
-}
-
-# Makes a WIP commit if there are no commits on the branch, otherwise makes a fixup to the first commit on the branch, without running pre-commit hooks.
-# Usage:
-# $ wip
-function wip() {
-  git add .
-  local FIXUP_HASH=$(git log main..HEAD --reverse --format="%H" | head -n 1)
-  if [[ -z "$FIXUP_HASH" ]]; then
-    git commit -m "wip" --no-verify
-  else
-    git commit --no-verify --fixup "$FIXUP_HASH"
   fi
 }
 
